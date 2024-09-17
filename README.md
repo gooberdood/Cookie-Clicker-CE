@@ -6,4 +6,7 @@ Using the CE C Toolchain, enter the src/gfx directory and run "convimg", then ba
 
 ### Changelog:
 
-IN ACTIVE DEVELOPMENT, NO RELEASES YET
+#### Beta 1.0:
+- Clickable cookie
+- Buyable mouse
+- Basic GUI
