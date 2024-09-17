@@ -1,6 +1,7 @@
 #include <keypadc.h>
 #include <compression.h>
 #include <graphx.h>
+#include <math.h>
 #include "gfx/ccsprt.h"
 #include "functions.h"
 
@@ -9,8 +10,8 @@ int mouseY = 120;
 int menu = 1;
 int inGame = true;
 int i;
-int clickTextObjs[30] = {0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50, 0, 240, -50}; //x, y, x, y...
-const int clickTextStartVelocity = 10;
+int shopMenu = 1;
+int frames = 0;
 unsigned int cookies = 0;
 unsigned int cookiesPerClick = 1;
 int clicking = false;
@@ -20,6 +21,12 @@ gfx_sprite_t *mouse1;
 gfx_sprite_t *perfectCookie;
 gfx_sprite_t *perfectCookieClicked;
 gfx_sprite_t *functionButton;
+gfx_sprite_t *shopSlot;
+gfx_sprite_t *menuSwitchButton;
+gfx_sprite_t *mouseShopIcon;
+
+int mouseCost = 15;
+int mouseOwned = 0;
 
 
 //initialize gfx / set up
@@ -31,6 +38,7 @@ void initGfx(void) {
 	gfx_SetTransparentColor(0);
 	gfx_SetTextTransparentColor(0);
 	gfx_SetTextBGColor(0);
+	gfx_SetTextConfig(gfx_text_clip);
 }
 
 
@@ -47,6 +55,15 @@ void decompressSprites(void) {
 	
 	functionButton = gfx_MallocSprite(functionButton_width, functionButton_height);
 	zx0_Decompress(functionButton, functionButton_compressed);
+	
+	shopSlot = gfx_MallocSprite(shopSlot_width, shopSlot_height);
+	zx0_Decompress(shopSlot, shopSlot_compressed);
+	
+	menuSwitchButton = gfx_MallocSprite(menuSwitchButton_width, menuSwitchButton_height);
+	zx0_Decompress(menuSwitchButton, menuSwitchButton_compressed);
+	
+	mouseShopIcon = gfx_MallocSprite(mouseShopIcon_width, mouseShopIcon_height);
+	zx0_Decompress(mouseShopIcon, mouseShopIcon_compressed);
 }
 
 
@@ -54,22 +71,28 @@ void getInput(void) {
 	//scans the keypad, then checks inputs
 	kb_Scan();
 	if (kb_Data[6] & kb_Clear) {inGame = false;}
-	if (kb_Data[7] & kb_Down) {mouseY += 3;}
-	if (kb_Data[7] & kb_Up) {mouseY -= 3;}
-	if (kb_Data[7] & kb_Left) {mouseX -= 3;}
-	if (kb_Data[7] & kb_Right) {mouseX += 3;}
+	if (kb_Data[7] & kb_Down) {mouseY += 4;}
+	if (kb_Data[7] & kb_Up) {mouseY -= 4;}
+	if (kb_Data[7] & kb_Left) {mouseX -= 4;}
+	if (kb_Data[7] & kb_Right) {mouseX += 4;}
 	
 	if (kb_Data[1] & kb_2nd) {
 		if (clicking == false) {
 			if (menu == 1) {
 				if ((mouseX < 104 && mouseX > 9) && (mouseY < 169 && mouseY > 74)) {
 					cookies += cookiesPerClick;
-					//click text particle
-					for (i = 0; i < 1; i++) {
-						if (clickTextObjs[(i*3)+1] == 240) {
-							clickTextObjs[i*3] = mouseX;
-							clickTextObjs[(i*3)+1] = mouseY;
-							clickTextObjs[(i*3)+2] = clickTextStartVelocity;
+				}
+				if ((mouseX < 244 && mouseX > 191) && (mouseY < 203 && mouseY > 171)) {
+					if (shopMenu > 1) {
+						shopMenu = shopMenu - 1;
+					}
+				}
+				if ((mouseX < 320 && mouseX > 191) && (mouseY < 33 && mouseY > 1)) {
+					if (shopMenu == 1) {
+						if (cookies >= mouseCost) {
+							cookies -= mouseCost;
+							mouseCost = ceil(mouseCost * 1.15);
+							mouseOwned += 1;
 						}
 					}
 				}
@@ -120,21 +143,45 @@ void renderWindow(void) {
 		gfx_PrintString("Cookies:");
 		gfx_SetTextXY(5, 32);
 		gfx_PrintUInt(cookies, 1);
+		gfx_SetTextXY(5, 41);
+		gfx_PrintString("Cookies per second:");
+		gfx_SetTextXY(5, 50);
+		gfx_PrintInt((mouseOwned), 1);
+		
+		//shop stuff
+		for (i = 0; i < 5; i++) {
+			gfx_Sprite(shopSlot, 191, (34*i)+1);
+		}
+		
+		//store menu switch buttons
+		gfx_Sprite(menuSwitchButton, 191, 171);
+		gfx_Sprite(menuSwitchButton, 256, 171);
+		gfx_SetTextFGColor(1);
+		gfx_PrintStringXY("Back", 203, 183);
+		gfx_PrintStringXY("Next", 268, 183);
+		gfx_SetTextFGColor(6);
+		if (shopMenu == 1) {
+			gfx_PrintStringXY("Back", 203, 183);
+		}
+		if (shopMenu == 4) {
+			gfx_PrintStringXY("Next", 268, 183);
+		}
+		
+		//shop prices and icons
+		gfx_SetTextFGColor(1);
+		if (shopMenu == 1) {
+			gfx_TransparentSprite(mouseShopIcon, 196, 6);
+			gfx_SetTextXY(227, 21);
+			gfx_PrintInt(mouseCost, 1);
+		}
 		
 		//version #
 		gfx_SetTextXY(5, 211);
-		gfx_PrintString("V. 1.0");
+		gfx_PrintString("V. B1.0");
 		
 		//function buttons
 		for(i = 0; i < 5; i++) {
 			gfx_TransparentSprite(functionButton, (i * 64) + 1, 224);
-		}
-		//click text particle
-		gfx_SetTextFGColor(5);
-		for (i = 0; i < 10; i++) {
-			gfx_SetTextXY(clickTextObjs[i*3], clickTextObjs[(i*3)+1]);
-			gfx_PrintString("+");
-			gfx_PrintUInt(cookiesPerClick, 1);
 		}
 		gfx_SetTextFGColor(1);
 	}
@@ -143,19 +190,10 @@ void renderWindow(void) {
 }
 
 
-void animationTiming(void) {
-	//click text particle
-	for (i = 0; i < 10; i++) {
-		if (clickTextObjs[(i*3)+1] <= 180) {
-			clickTextObjs[(i*3)+1] -= clickTextObjs[(i*3)+2];
-			if (clickTextObjs[(i*3)+2] > -50) {
-				clickTextObjs[(i*3)+2] -= 1;
-			}
-		}
-		if (clickTextObjs[(i*3)+1] > 180) {
-			clickTextObjs[i*3] = 0;
-			clickTextObjs[(i*3)+1] = 240;
-			clickTextObjs[(i*3)+2] = -50;
-		}
+void timerStuff(void) {
+	frames += 1;
+	if (frames >= 30) {
+		cookies += (mouseOwned);
+		frames = 0;
 	}
 }

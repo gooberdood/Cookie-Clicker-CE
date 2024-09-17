@@ -5,6 +5,7 @@
 #include <graphx.h>
 #include <keypadc.h>
 #include <time.h>
+#include <math.h>
 #include "gfx/ccsprt.h"
 #include "functions.h"
 
@@ -24,7 +25,7 @@ int main(void) {
 		clock_t frame_start = clock(); //starts frame timer
 		
 		getInput(); //calls getInput function to, well, get input, and do stuff with said input
-		animationTiming(); //does animation related math (particle gravity etc)
+		timerStuff(); //does animation related math (particle gravity etc)
 		renderWindow(); //graphics rendering :3
 		
 		//waits until ~1/60th of a second to render frame
@@ -39,5 +40,8 @@ int main(void) {
 	free(perfectCookie);
 	free(perfectCookieClicked);
 	free(functionButton);
+	free(shopSlot);
+	free(menuSwitchButton);
+	free(mouseShopIcon);
     return 0;
 }
