@@ -43,5 +43,10 @@ int main(void) {
 	free(shopSlot);
 	free(menuSwitchButton);
 	free(mouseShopIcon);
+	free(grandmaShopIcon);
+	free(farmShopIcon);
+	free(mineShopIcon);
+	free(factoryShopIcon);
+	free(bankShopIcon);
     return 0;
 }

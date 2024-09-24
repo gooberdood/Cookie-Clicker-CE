@@ -17,6 +17,7 @@ unsigned int cookiesPerClick = 1;
 int clicking = false;
 char playerName[] = "Player";
 int bakeryNameLength;
+
 gfx_sprite_t *mouse1;
 gfx_sprite_t *perfectCookie;
 gfx_sprite_t *perfectCookieClicked;
@@ -24,9 +25,16 @@ gfx_sprite_t *functionButton;
 gfx_sprite_t *shopSlot;
 gfx_sprite_t *menuSwitchButton;
 gfx_sprite_t *mouseShopIcon;
+gfx_sprite_t *grandmaShopIcon;
+gfx_sprite_t *farmShopIcon;
+gfx_sprite_t *mineShopIcon;
+gfx_sprite_t *factoryShopIcon;
+gfx_sprite_t *bankShopIcon;
 
-int mouseCost = 15;
+unsigned int mouseCost = 15;
 int mouseOwned = 0;
+unsigned int grandmaCost = 100;
+int grandmaOwned = 0;
 
 
 //initialize gfx / set up
@@ -64,6 +72,21 @@ void decompressSprites(void) {
 	
 	mouseShopIcon = gfx_MallocSprite(mouseShopIcon_width, mouseShopIcon_height);
 	zx0_Decompress(mouseShopIcon, mouseShopIcon_compressed);
+	
+	grandmaShopIcon = gfx_MallocSprite(grandmaShopIcon_width, grandmaShopIcon_height);
+	zx0_Decompress(grandmaShopIcon, grandmaShopIcon_compressed);
+	
+	farmShopIcon = gfx_MallocSprite(farmShopIcon_width, farmShopIcon_height);
+	zx0_Decompress(farmShopIcon, farmShopIcon_compressed);
+	
+	mineShopIcon = gfx_MallocSprite(mineShopIcon_width, mineShopIcon_height);
+	zx0_Decompress(mineShopIcon, mineShopIcon_compressed);
+	
+	factoryShopIcon = gfx_MallocSprite(factoryShopIcon_width, factoryShopIcon_height);
+	zx0_Decompress(factoryShopIcon, factoryShopIcon_compressed);
+	
+	bankShopIcon = gfx_MallocSprite(bankShopIcon_width, bankShopIcon_height);
+	zx0_Decompress(bankShopIcon, bankShopIcon_compressed);
 }
 
 
@@ -76,7 +99,7 @@ void getInput(void) {
 	if (kb_Data[7] & kb_Left) {mouseX -= 4;}
 	if (kb_Data[7] & kb_Right) {mouseX += 4;}
 	
-	if (kb_Data[1] & kb_2nd) {
+	if ((kb_Data[1] & kb_2nd) or (kb_Data[6] & kb_Enter)) {
 		if (clicking == false) {
 			if (menu == 1) {
 				if ((mouseX < 104 && mouseX > 9) && (mouseY < 169 && mouseY > 74)) {
@@ -87,12 +110,23 @@ void getInput(void) {
 						shopMenu = shopMenu - 1;
 					}
 				}
-				if ((mouseX < 320 && mouseX > 191) && (mouseY < 33 && mouseY > 1)) {
-					if (shopMenu == 1) {
-						if (cookies >= mouseCost) {
-							cookies -= mouseCost;
-							mouseCost = ceil(mouseCost * 1.15);
-							mouseOwned += 1;
+				if (mouseX < 320 && mouseX > 191) { //sees if cursor is by the shop boxes
+					if (mouseY < 33 && mouseY > 1) {
+						if (shopMenu == 1) {
+							if (cookies >= mouseCost) {
+								cookies -= mouseCost;
+								mouseCost = ceil(mouseCost * 1.15);
+								mouseOwned += 1;
+							}
+						}
+					}
+					if (mouseY < 66 && mouseY > 33) {
+						if (shopMenu == 1) {
+							if (cookies >= grandmaCost) {
+								cookies -= grandmaCost;
+								grandmaCost = ceil(grandmaCost * 1.15);
+								grandmaOwned += 1;
+							}
 						}
 					}
 				}
@@ -146,7 +180,7 @@ void renderWindow(void) {
 		gfx_SetTextXY(5, 41);
 		gfx_PrintString("Cookies per second:");
 		gfx_SetTextXY(5, 50);
-		gfx_PrintInt((mouseOwned), 1);
+		gfx_PrintInt(round(mouseOwned*.1 + grandmaOwned*1), 1);
 		
 		//shop stuff
 		for (i = 0; i < 5; i++) {
@@ -171,8 +205,14 @@ void renderWindow(void) {
 		gfx_SetTextFGColor(1);
 		if (shopMenu == 1) {
 			gfx_TransparentSprite(mouseShopIcon, 196, 6);
+			gfx_TransparentSprite(grandmaShopIcon, 196, 40);
+			gfx_TransparentSprite(farmShopIcon, 196, 74);
+			gfx_TransparentSprite(mineShopIcon, 196, 108);
+			gfx_TransparentSprite(factoryShopIcon, 196, 142);
 			gfx_SetTextXY(227, 21);
 			gfx_PrintInt(mouseCost, 1);
+			gfx_SetTextXY(227, 54);
+			gfx_PrintInt(grandmaCost, 1);
 		}
 		
 		//version #
@@ -193,7 +233,7 @@ void renderWindow(void) {
 void timerStuff(void) {
 	frames += 1;
 	if (frames >= 30) {
-		cookies += (mouseOwned);
+		cookies += (round(mouseOwned*.1 + grandmaOwned*1));
 		frames = 0;
 	}
 }

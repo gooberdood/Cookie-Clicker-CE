@@ -22,7 +22,26 @@ converts:
      - assets/ui/functionButton.png
      - assets/ui/shopSlot.png
      - assets/ui/menuSwitchButton.png
-     - assets/ui/mouseShopIcon.png
+     - assets/ui/shopIcons/mouseShopIcon.png
+     - assets/ui/shopIcons/grandmaShopIcon.png
+     - assets/ui/shopIcons/farmShopIcon.png
+     - assets/ui/shopIcons/mineShopIcon.png
+     - assets/ui/shopIcons/factoryShopIcon.png
+     - assets/ui/shopIcons/bankShopIcon.png
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
+#     - assets/ui/shopIcons/
 
 outputs:
   - type: appvar
