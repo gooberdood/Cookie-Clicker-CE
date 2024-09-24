@@ -4,7 +4,7 @@
 
 NAME = CookClik
 ICON = icon.png
-DESCRIPTION = "Cookie Clicker for TI84 CE"
+DESCRIPTION = "Cookie Clicker for the TI-84 CE"
 COMPRESSED = YES
 COMPRESSED_MODE = zx0
 ARCHIVED = YES

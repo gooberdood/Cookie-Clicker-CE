@@ -12,8 +12,11 @@ int inGame = true;
 int i;
 int shopMenu = 1;
 int frames = 0;
-unsigned int cookies = 0;
-unsigned int cookiesPerClick = 1;
+float cookies = 0;
+float cookiesText = 0;
+char cookiesRoundedText[];
+float cookiesPerClick = 1;
+float cookiesPerClickText = 1;
 int clicking = false;
 char playerName[] = "Player";
 int bakeryNameLength;
@@ -31,10 +34,36 @@ gfx_sprite_t *mineShopIcon;
 gfx_sprite_t *factoryShopIcon;
 gfx_sprite_t *bankShopIcon;
 
-unsigned int mouseCost = 15;
+float mouseCost = 15;
+float mouseMultiplier = 0.1;
 int mouseOwned = 0;
-unsigned int grandmaCost = 100;
+float grandmaCost = 100;
+float grandmaMultiplier = 1;
 int grandmaOwned = 0;
+float farmCost = 1100;
+float farmMultiplier = 8;
+int farmOwned = 0;
+float mineCost = 12000;
+float mineMultiplier = 47;
+int mineOwned = 0;
+float factoryCost = 130000;
+float factoryMultiplier = 260;
+int factoryOwned = 0;
+float bankCost = 1400000;
+float bankMultiplier = 1400;
+int bankOwned = 0;
+float templeCost = 20000000;
+float templeMultiplier = 7800;
+int templeOwned = 0;
+float towerCost = 330000000;
+float towerMultiplier = 44000;
+int towerOwned = 0;
+float shipmentCost = 5100000000;
+float shipmentMultiplier = 260000;
+int shipmentOwned = 0;
+float alchemyCost = 75000000000;
+float alchemyMultiplier = 1600000;
+int alchemyOwned = 0;
 
 
 //initialize gfx / set up
@@ -87,6 +116,18 @@ void decompressSprites(void) {
 	
 	bankShopIcon = gfx_MallocSprite(bankShopIcon_width, bankShopIcon_height);
 	zx0_Decompress(bankShopIcon, bankShopIcon_compressed);
+	
+	templeShopIcon = gfx_MallocSprite(templeShopIcon_width, templeShopIcon_height);
+	zx0_Decompress(templeShopIcon, templeShopIcon_compressed);
+	
+	towerShopIcon = gfx_MallocSprite(towerShopIcon_width, towerShopIcon_height);
+	zx0_Decompress(towerShopIcon, towerShopIcon_compressed);
+	
+	shipmentShopIcon = gfx_MallocSprite(shipmentShopIcon_width, shipmentShopIcon_height);
+	zx0_Decompress(shipmentShopIcon, shipmentShopIcon_compressed);
+	
+	alchemyShopIcon = gfx_MallocSprite(bankShopIcon_width, bankShopIcon_height);
+	zx0_Decompress(alchemyShopIcon, alchemyShopIcon_compressed);
 }
 
 
@@ -99,15 +140,22 @@ void getInput(void) {
 	if (kb_Data[7] & kb_Left) {mouseX -= 4;}
 	if (kb_Data[7] & kb_Right) {mouseX += 4;}
 	
-	if ((kb_Data[1] & kb_2nd) or (kb_Data[6] & kb_Enter)) {
+	if ((kb_Data[1] & kb_2nd) || (kb_Data[6] & kb_Enter)) {
 		if (clicking == false) {
 			if (menu == 1) {
 				if ((mouseX < 104 && mouseX > 9) && (mouseY < 169 && mouseY > 74)) {
 					cookies += cookiesPerClick;
 				}
-				if ((mouseX < 244 && mouseX > 191) && (mouseY < 203 && mouseY > 171)) {
-					if (shopMenu > 1) {
-						shopMenu = shopMenu - 1;
+				if (mouseY < 203 && mouseY > 171) {
+					if (mouseX < 244 && mouseX > 191) {
+						if (shopMenu > 1) {
+							shopMenu = shopMenu - 1;
+						}
+					}
+					if (mouseX < 320 && mouseX > 244) {
+						if (shopMenu < 5) {
+							shopMenu = shopMenu + 1;
+						}
 					}
 				}
 				if (mouseX < 320 && mouseX > 191) { //sees if cursor is by the shop boxes
@@ -115,8 +163,15 @@ void getInput(void) {
 						if (shopMenu == 1) {
 							if (cookies >= mouseCost) {
 								cookies -= mouseCost;
-								mouseCost = ceil(mouseCost * 1.15);
+								mouseCost = mouseCost * 1.15;
 								mouseOwned += 1;
+							}
+						}
+						if (shopMenu == 2) {
+							if (cookies >= bankCost) {
+								cookies -= bankCost;
+								bankCost = bankCost * 1.15;
+								bankOwned += 1;
 							}
 						}
 					}
@@ -124,8 +179,63 @@ void getInput(void) {
 						if (shopMenu == 1) {
 							if (cookies >= grandmaCost) {
 								cookies -= grandmaCost;
-								grandmaCost = ceil(grandmaCost * 1.15);
+								grandmaCost = grandmaCost * 1.15;
 								grandmaOwned += 1;
+							}
+						}
+						if (shopMenu == 2) {
+							if (cookies >= templeCost) {
+								cookies -= templeCost;
+								templeCost = templeCost * 1.15;
+								templeOwned += 1;
+							}
+						}
+					}
+					if (mouseY < 99 && mouseY > 66) {
+						if (shopMenu == 1) {
+							if (cookies >= farmCost) {
+								cookies -= farmCost;
+								farmCost = farmCost * 1.15;
+								farmOwned += 1;
+							}
+						}
+						if (shopMenu == 2) {
+							if (cookies >= towerCost) {
+								cookies -= towerCost;
+								towerCost = towerCost * 1.15;
+								towerOwned += 1;
+							}
+						}
+					}
+					if (mouseY < 132 && mouseY > 99) {
+						if (shopMenu == 1) {
+							if (cookies >= mineCost) {
+								cookies -= mineCost;
+								mineCost = mineCost * 1.15;
+								mineOwned += 1;
+							}
+						}
+						if (shopMenu == 2) {
+							if (cookies >= shipmentCost) {
+								cookies -= shipmentCost;
+								shipmentCost = shipmentCost * 1.15;
+								shipmentOwned += 1;
+							}
+						}
+					}
+					if (mouseY < 165 && mouseY > 132) {
+						if (shopMenu == 1) {
+							if (cookies >= factoryCost) {
+								cookies -= factoryCost;
+								factoryCost = factoryCost * 1.15;
+								factoryOwned += 1;
+							}
+						}
+						if (shopMenu == 2) {
+							if (cookies >= alchemyCost) {
+								cookies -= alchemyCost;
+								alchemyCost = alchemyCost * 1.15;
+								alchemyOwned += 1;
 							}
 						}
 					}
@@ -176,7 +286,7 @@ void renderWindow(void) {
 		gfx_SetTextFGColor(1);
 		gfx_PrintString("Cookies:");
 		gfx_SetTextXY(5, 32);
-		gfx_PrintUInt(cookies, 1);
+		gfx_PrintInt(round(cookies), 1);
 		gfx_SetTextXY(5, 41);
 		gfx_PrintString("Cookies per second:");
 		gfx_SetTextXY(5, 50);
@@ -209,15 +319,78 @@ void renderWindow(void) {
 			gfx_TransparentSprite(farmShopIcon, 196, 74);
 			gfx_TransparentSprite(mineShopIcon, 196, 108);
 			gfx_TransparentSprite(factoryShopIcon, 196, 142);
+			
+			gfx_SetTextXY(219, 6);
+			gfx_PrintString("x");
+			gfx_PrintInt(mouseOwned, 1);
 			gfx_SetTextXY(227, 21);
-			gfx_PrintInt(mouseCost, 1);
-			gfx_SetTextXY(227, 54);
-			gfx_PrintInt(grandmaCost, 1);
+			gfx_PrintInt(round(mouseCost), 1);
+			
+			gfx_SetTextXY(219, 40);
+			gfx_PrintString("x");
+			gfx_PrintInt(grandmaOwned, 1);
+			gfx_SetTextXY(227, 55);
+			gfx_PrintInt(round(grandmaCost), 1);
+			
+			gfx_SetTextXY(219, 74);
+			gfx_PrintString("x");
+			gfx_PrintInt(farmOwned, 1);
+			gfx_SetTextXY(227, 89);
+			gfx_PrintInt(round(farmCost), 1);
+			
+			gfx_SetTextXY(219, 108);
+			gfx_PrintString("x");
+			gfx_PrintInt(mineOwned, 1);
+			gfx_SetTextXY(227, 123);
+			gfx_PrintInt(round(mineCost), 1);
+			
+			gfx_SetTextXY(219, 142);
+			gfx_PrintString("x");
+			gfx_PrintInt(factoryOwned, 1);
+			gfx_SetTextXY(227, 157);
+			gfx_PrintInt(round(factoryCost), 1);
+		}
+		if (shopMenu == 2) {
+			gfx_TransparentSprite(mouseShopIcon, 196, 6);
+			gfx_TransparentSprite(grandmaShopIcon, 196, 40);
+			gfx_TransparentSprite(farmShopIcon, 196, 74);
+			gfx_TransparentSprite(mineShopIcon, 196, 108);
+			gfx_TransparentSprite(factoryShopIcon, 196, 142);
+			
+			gfx_SetTextXY(219, 6);
+			gfx_PrintString("x");
+			gfx_PrintInt(mouseOwned, 1);
+			gfx_SetTextXY(227, 21);
+			gfx_PrintInt(round(mouseCost), 1);
+			
+			gfx_SetTextXY(219, 40);
+			gfx_PrintString("x");
+			gfx_PrintInt(grandmaOwned, 1);
+			gfx_SetTextXY(227, 55);
+			gfx_PrintInt(round(grandmaCost), 1);
+			
+			gfx_SetTextXY(219, 74);
+			gfx_PrintString("x");
+			gfx_PrintInt(farmOwned, 1);
+			gfx_SetTextXY(227, 89);
+			gfx_PrintInt(round(farmCost), 1);
+			
+			gfx_SetTextXY(219, 108);
+			gfx_PrintString("x");
+			gfx_PrintInt(mineOwned, 1);
+			gfx_SetTextXY(227, 123);
+			gfx_PrintInt(round(mineCost), 1);
+			
+			gfx_SetTextXY(219, 142);
+			gfx_PrintString("x");
+			gfx_PrintInt(factoryOwned, 1);
+			gfx_SetTextXY(227, 157);
+			gfx_PrintInt(round(factoryCost), 1);
 		}
 		
 		//version #
 		gfx_SetTextXY(5, 211);
-		gfx_PrintString("V. B1.0");
+		gfx_PrintString("V. B2.0");
 		
 		//function buttons
 		for(i = 0; i < 5; i++) {
@@ -232,8 +405,8 @@ void renderWindow(void) {
 
 void timerStuff(void) {
 	frames += 1;
-	if (frames >= 30) {
-		cookies += (round(mouseOwned*.1 + grandmaOwned*1));
+	if (frames >= 20) {
+		cookies += (mouseOwned*mouseMultiplier + grandmaOwned*grandmaMultiplier + farmOwned*farmMultiplier + mineOwned*mineMultiplier + factoryOwned*factoryMultiplier);
 		frames = 0;
 	}
 }

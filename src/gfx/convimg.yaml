@@ -28,10 +28,10 @@ converts:
      - assets/ui/shopIcons/mineShopIcon.png
      - assets/ui/shopIcons/factoryShopIcon.png
      - assets/ui/shopIcons/bankShopIcon.png
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
+     - assets/ui/shopIcons/templeShopIcon.png
+     - assets/ui/shopIcons/towerShopIcon.png
+     - assets/ui/shopIcons/shipmentShopIcon.png
+     - assets/ui/shopIcons/alchemyShopIcon.png
 #     - assets/ui/shopIcons/
 #     - assets/ui/shopIcons/
 #     - assets/ui/shopIcons/

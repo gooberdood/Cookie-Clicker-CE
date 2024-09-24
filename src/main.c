@@ -10,7 +10,7 @@
 #include "functions.h"
 
 //frame limit
-#define TARGET_FRAMERATE 30
+#define TARGET_FRAMERATE 20
 #define TARGET_FRAME_TIME (CLOCKS_PER_SEC / TARGET_FRAMERATE)
 
 //main stuffz
@@ -48,5 +48,9 @@ int main(void) {
 	free(mineShopIcon);
 	free(factoryShopIcon);
 	free(bankShopIcon);
+	free(templeShopIcon);
+	free(towerShopIcon);
+	free(shipmentShopIcon);
+	free(alchemyShopIcon);
     return 0;
 }
