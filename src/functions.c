@@ -13,10 +13,7 @@ int i;
 int shopMenu = 1;
 int frames = 0;
 float cookies = 0;
-float cookiesText = 0;
-char cookiesRoundedText[];
 float cookiesPerClick = 1;
-float cookiesPerClickText = 1;
 int clicking = false;
 char playerName[] = "Player";
 int bakeryNameLength;
@@ -27,12 +24,18 @@ gfx_sprite_t *perfectCookieClicked;
 gfx_sprite_t *functionButton;
 gfx_sprite_t *shopSlot;
 gfx_sprite_t *menuSwitchButton;
+
 gfx_sprite_t *mouseShopIcon;
 gfx_sprite_t *grandmaShopIcon;
 gfx_sprite_t *farmShopIcon;
 gfx_sprite_t *mineShopIcon;
 gfx_sprite_t *factoryShopIcon;
+
 gfx_sprite_t *bankShopIcon;
+gfx_sprite_t *templeShopIcon;
+gfx_sprite_t *towerShopIcon;
+gfx_sprite_t *shipmentShopIcon;
+gfx_sprite_t *alchemyShopIcon;
 
 float mouseCost = 15;
 float mouseMultiplier = 0.1;
@@ -152,7 +155,7 @@ void getInput(void) {
 							shopMenu = shopMenu - 1;
 						}
 					}
-					if (mouseX < 320 && mouseX > 244) {
+					if (mouseX < 320 && mouseX > 247) {
 						if (shopMenu < 5) {
 							shopMenu = shopMenu + 1;
 						}
@@ -397,6 +400,16 @@ void renderWindow(void) {
 			gfx_TransparentSprite(functionButton, (i * 64) + 1, 224);
 		}
 		gfx_SetTextFGColor(1);
+		gfx_SetTextXY(3, 225);
+		gfx_PrintString("SETTINGS");
+		gfx_SetTextXY(66, 225);
+		gfx_PrintString("UPGRADES");
+		gfx_SetTextXY(130, 225);
+		gfx_PrintString("INFO");
+		gfx_SetTextXY(194, 225);
+		gfx_PrintString("ASCEND");
+		gfx_SetTextXY(258, 225);
+		gfx_PrintString("STATS");
 	}
 	gfx_TransparentSprite(mouse1, mouseX, mouseY);
 	gfx_SwapDraw();

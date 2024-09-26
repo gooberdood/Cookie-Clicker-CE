@@ -22,26 +22,30 @@ converts:
      - assets/ui/functionButton.png
      - assets/ui/shopSlot.png
      - assets/ui/menuSwitchButton.png
+     
      - assets/ui/shopIcons/mouseShopIcon.png
      - assets/ui/shopIcons/grandmaShopIcon.png
      - assets/ui/shopIcons/farmShopIcon.png
      - assets/ui/shopIcons/mineShopIcon.png
      - assets/ui/shopIcons/factoryShopIcon.png
+     
      - assets/ui/shopIcons/bankShopIcon.png
      - assets/ui/shopIcons/templeShopIcon.png
      - assets/ui/shopIcons/towerShopIcon.png
      - assets/ui/shopIcons/shipmentShopIcon.png
      - assets/ui/shopIcons/alchemyShopIcon.png
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
-#     - assets/ui/shopIcons/
+     
+     - assets/ui/shopIcons/portalShopIcon.png
+     - assets/ui/shopIcons/timeShopIcon.png
+     - assets/ui/shopIcons/condenserShopIcon.png
+     - assets/ui/shopIcons/prismShopIcon.png
+     - assets/ui/shopIcons/chancemakerShopIcon.png
+     
+     - assets/ui/shopIcons/fractalShopIcon.png
+     - assets/ui/shopIcons/javaShopIcon.png
+     - assets/ui/shopIcons/idleverseShopIcon.png
+     - assets/ui/shopIcons/cortexShopIcon.png
+     - assets/ui/shopIcons/youShopIcon.png
 
 outputs:
   - type: appvar
