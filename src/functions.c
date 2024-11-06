@@ -4,6 +4,7 @@
 #include <math.h>
 #include "gfx/ccsprt.h"
 #include "functions.h"
+#include "loadSprites.h"
 
 int mouseX = 160;
 int mouseY = 120;
@@ -17,25 +18,6 @@ float cookiesPerClick = 1;
 int clicking = false;
 char playerName[] = "Player";
 int bakeryNameLength;
-
-gfx_sprite_t *mouse1;
-gfx_sprite_t *perfectCookie;
-gfx_sprite_t *perfectCookieClicked;
-gfx_sprite_t *functionButton;
-gfx_sprite_t *shopSlot;
-gfx_sprite_t *menuSwitchButton;
-
-gfx_sprite_t *mouseShopIcon;
-gfx_sprite_t *grandmaShopIcon;
-gfx_sprite_t *farmShopIcon;
-gfx_sprite_t *mineShopIcon;
-gfx_sprite_t *factoryShopIcon;
-
-gfx_sprite_t *bankShopIcon;
-gfx_sprite_t *templeShopIcon;
-gfx_sprite_t *towerShopIcon;
-gfx_sprite_t *shipmentShopIcon;
-gfx_sprite_t *alchemyShopIcon;
 
 float mouseCost = 15;
 float mouseMultiplier = 0.1;
@@ -82,71 +64,19 @@ void initGfx(void) {
 }
 
 
-//decompresses sprites
-void decompressSprites(void) {
-	mouse1 = gfx_MallocSprite(mouse1_width, mouse1_height);
-	zx0_Decompress(mouse1, mouse1_compressed);
-	
-	perfectCookie = gfx_MallocSprite(perfectCookie_width, perfectCookie_height);
-	zx0_Decompress(perfectCookie, perfectCookie_compressed);
-	
-	perfectCookieClicked = gfx_MallocSprite(perfectCookieClicked_width, perfectCookieClicked_height);
-	zx0_Decompress(perfectCookieClicked, perfectCookieClicked_compressed);
-	
-	functionButton = gfx_MallocSprite(functionButton_width, functionButton_height);
-	zx0_Decompress(functionButton, functionButton_compressed);
-	
-	shopSlot = gfx_MallocSprite(shopSlot_width, shopSlot_height);
-	zx0_Decompress(shopSlot, shopSlot_compressed);
-	
-	menuSwitchButton = gfx_MallocSprite(menuSwitchButton_width, menuSwitchButton_height);
-	zx0_Decompress(menuSwitchButton, menuSwitchButton_compressed);
-	
-	mouseShopIcon = gfx_MallocSprite(mouseShopIcon_width, mouseShopIcon_height);
-	zx0_Decompress(mouseShopIcon, mouseShopIcon_compressed);
-	
-	grandmaShopIcon = gfx_MallocSprite(grandmaShopIcon_width, grandmaShopIcon_height);
-	zx0_Decompress(grandmaShopIcon, grandmaShopIcon_compressed);
-	
-	farmShopIcon = gfx_MallocSprite(farmShopIcon_width, farmShopIcon_height);
-	zx0_Decompress(farmShopIcon, farmShopIcon_compressed);
-	
-	mineShopIcon = gfx_MallocSprite(mineShopIcon_width, mineShopIcon_height);
-	zx0_Decompress(mineShopIcon, mineShopIcon_compressed);
-	
-	factoryShopIcon = gfx_MallocSprite(factoryShopIcon_width, factoryShopIcon_height);
-	zx0_Decompress(factoryShopIcon, factoryShopIcon_compressed);
-	
-	bankShopIcon = gfx_MallocSprite(bankShopIcon_width, bankShopIcon_height);
-	zx0_Decompress(bankShopIcon, bankShopIcon_compressed);
-	
-	templeShopIcon = gfx_MallocSprite(templeShopIcon_width, templeShopIcon_height);
-	zx0_Decompress(templeShopIcon, templeShopIcon_compressed);
-	
-	towerShopIcon = gfx_MallocSprite(towerShopIcon_width, towerShopIcon_height);
-	zx0_Decompress(towerShopIcon, towerShopIcon_compressed);
-	
-	shipmentShopIcon = gfx_MallocSprite(shipmentShopIcon_width, shipmentShopIcon_height);
-	zx0_Decompress(shipmentShopIcon, shipmentShopIcon_compressed);
-	
-	alchemyShopIcon = gfx_MallocSprite(bankShopIcon_width, bankShopIcon_height);
-	zx0_Decompress(alchemyShopIcon, alchemyShopIcon_compressed);
-}
-
-
 void getInput(void) {
 	//scans the keypad, then checks inputs
 	kb_Scan();
 	if (kb_Data[6] & kb_Clear) {inGame = false;}
-	if (kb_Data[7] & kb_Down) {mouseY += 4;}
-	if (kb_Data[7] & kb_Up) {mouseY -= 4;}
-	if (kb_Data[7] & kb_Left) {mouseX -= 4;}
-	if (kb_Data[7] & kb_Right) {mouseX += 4;}
+	if (kb_Data[7] & kb_Down) {mouseY += 5;}
+	if (kb_Data[7] & kb_Up) {mouseY -= 5;}
+	if (kb_Data[7] & kb_Left) {mouseX -= 5;}
+	if (kb_Data[7] & kb_Right) {mouseX += 5;}
 	
 	if ((kb_Data[1] & kb_2nd) || (kb_Data[6] & kb_Enter)) {
 		if (clicking == false) {
 			if (menu == 1) {
-				if ((mouseX < 104 && mouseX > 9) && (mouseY < 169 && mouseY > 74)) {
+				if ((mouseX < 139 && mouseX > 39) && (mouseY < 174 && mouseY > 74)) {
 					cookies += cookiesPerClick;
 				}
 				if (mouseY < 203 && mouseY > 171) {
@@ -156,7 +86,7 @@ void getInput(void) {
 						}
 					}
 					if (mouseX < 320 && mouseX > 247) {
-						if (shopMenu < 5) {
+						if (shopMenu <= 4) {
 							shopMenu = shopMenu + 1;
 						}
 					}
@@ -247,6 +177,12 @@ void getInput(void) {
 			clicking = true;
 		}
 	} else {clicking = false;}
+	if (shopMenu == 5) {
+		shopMenu = 4;
+	}
+	if (shopMenu == 0) {
+		shopMenu = 1;
+	}
 }
 
 
@@ -263,14 +199,14 @@ void renderWindow(void) {
 	if (menu == 1) {
 		//big cookie
 		if (clicking == false) {
-			gfx_TransparentSprite(perfectCookie, 9, 74);
+			gfx_TransparentSprite(perfectCookie, 39, 74);
 		}
 		else {
-			if ((mouseX < 104 && mouseX > 9) && (mouseY < 169 && mouseY > 74)) {
-				gfx_TransparentSprite(perfectCookieClicked, 9, 74);
+			if ((mouseX < 139 && mouseX > 39) && (mouseY < 174 && mouseY > 74)) {
+				gfx_TransparentSprite(perfectCookieClicked, 39, 74);
 			}
 			else {
-				gfx_TransparentSprite(perfectCookie, 9, 74);
+				gfx_TransparentSprite(perfectCookie, 39, 74);
 			}
 		}
 		
@@ -295,33 +231,31 @@ void renderWindow(void) {
 		gfx_SetTextXY(5, 50);
 		gfx_PrintInt(round(mouseOwned*.1 + grandmaOwned*1), 1);
 		
-		//shop stuff
-		for (i = 0; i < 5; i++) {
-			gfx_Sprite(shopSlot, 191, (34*i)+1);
-		}
-		
 		//store menu switch buttons
-		gfx_Sprite(menuSwitchButton, 191, 171);
-		gfx_Sprite(menuSwitchButton, 256, 171);
+		for (i = 0; i < 5; i++) {
+			gfx_Sprite(shopSlot, 191, (35*i)+1);
+		}
+		gfx_Sprite(menuSwitchButton, 191, 176);
+		gfx_Sprite(menuSwitchButton, 256, 176);
 		gfx_SetTextFGColor(1);
-		gfx_PrintStringXY("Back", 203, 183);
-		gfx_PrintStringXY("Next", 268, 183);
+		gfx_PrintStringXY("Back", 203, 188);
+		gfx_PrintStringXY("Next", 268, 188);
 		gfx_SetTextFGColor(6);
 		if (shopMenu == 1) {
-			gfx_PrintStringXY("Back", 203, 183);
+			gfx_PrintStringXY("Back", 203, 188);
 		}
 		if (shopMenu == 4) {
-			gfx_PrintStringXY("Next", 268, 183);
+			gfx_PrintStringXY("Next", 268, 188);
 		}
 		
 		//shop prices and icons
 		gfx_SetTextFGColor(1);
 		if (shopMenu == 1) {
 			gfx_TransparentSprite(mouseShopIcon, 196, 6);
-			gfx_TransparentSprite(grandmaShopIcon, 196, 40);
-			gfx_TransparentSprite(farmShopIcon, 196, 74);
-			gfx_TransparentSprite(mineShopIcon, 196, 108);
-			gfx_TransparentSprite(factoryShopIcon, 196, 142);
+			gfx_TransparentSprite(grandmaShopIcon, 196, 41);
+			gfx_TransparentSprite(farmShopIcon, 196, 76);
+			gfx_TransparentSprite(mineShopIcon, 196, 111);
+			gfx_TransparentSprite(factoryShopIcon, 196, 145);
 			
 			gfx_SetTextXY(219, 6);
 			gfx_PrintString("x");
@@ -354,11 +288,11 @@ void renderWindow(void) {
 			gfx_PrintInt(round(factoryCost), 1);
 		}
 		if (shopMenu == 2) {
-			gfx_TransparentSprite(mouseShopIcon, 196, 6);
-			gfx_TransparentSprite(grandmaShopIcon, 196, 40);
-			gfx_TransparentSprite(farmShopIcon, 196, 74);
-			gfx_TransparentSprite(mineShopIcon, 196, 108);
-			gfx_TransparentSprite(factoryShopIcon, 196, 142);
+			gfx_TransparentSprite(bankShopIcon, 196, 6);
+			gfx_TransparentSprite(templeShopIcon, 196, 41m);
+			gfx_TransparentSprite(towerShopIcon, 196, 76);
+			gfx_TransparentSprite(shipmentShopIcon, 196, 111);
+			gfx_TransparentSprite(alchemyShopIcon, 196, 145);
 			
 			gfx_SetTextXY(219, 6);
 			gfx_PrintString("x");
@@ -392,25 +326,29 @@ void renderWindow(void) {
 		}
 		
 		//version #
-		gfx_SetTextXY(5, 211);
+		gfx_SetTextXY(5, 201);
 		gfx_PrintString("V. B2.0");
 		
-		//function buttons
-		for(i = 0; i < 5; i++) {
-			gfx_TransparentSprite(functionButton, (i * 64) + 1, 224);
-		}
-		gfx_SetTextFGColor(1);
-		gfx_SetTextXY(3, 225);
-		gfx_PrintString("SETTINGS");
-		gfx_SetTextXY(66, 225);
-		gfx_PrintString("UPGRADES");
-		gfx_SetTextXY(130, 225);
-		gfx_PrintString("INFO");
-		gfx_SetTextXY(194, 225);
-		gfx_PrintString("ASCEND");
-		gfx_SetTextXY(258, 225);
-		gfx_PrintString("STATS");
+		gfx_Sprite(panelVertical, 180, 0);
 	}
+	//function buttons
+	gfx_Sprite(panelHorizontal, 0, 212);
+	gfx_Sprite(panelHorizontal, 160, 212);
+	for(i = 0; i < 5; i++) {
+		gfx_TransparentSprite(functionButton, (i * 64) + 1, 224);
+	}
+	gfx_SetTextFGColor(1);
+	gfx_SetTextXY(5, 230);
+	gfx_PrintString("CONFIG");
+	gfx_SetTextXY(68, 230);
+	gfx_PrintString("UPGRADE");
+	gfx_SetTextXY(132, 230);
+	gfx_PrintString("INFO");
+	gfx_SetTextXY(196, 230);
+	gfx_PrintString("ASCEND");
+	gfx_SetTextXY(260, 230);
+	gfx_PrintString("STATS");
+
 	gfx_TransparentSprite(mouse1, mouseX, mouseY);
 	gfx_SwapDraw();
 }

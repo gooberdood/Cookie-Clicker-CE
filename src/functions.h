@@ -1,6 +1,7 @@
 #include <graphx.h>
 #include <math.h>
 #include "gfx/ccsprt.h"
+#include "loadSprites.h"
 #ifndef GET_INPUT_H
 #define GET_INPUT_H
 
@@ -15,25 +16,6 @@ extern int inGame;
 extern int menu;
 extern int frames;
 extern char playerName[];
-
-extern gfx_sprite_t *mouse1;
-extern gfx_sprite_t *perfectCookie;
-extern gfx_sprite_t *perfectCookieClicked;
-extern gfx_sprite_t *functionButton;
-extern gfx_sprite_t *shopSlot;
-extern gfx_sprite_t *menuSwitchButton;
-
-extern gfx_sprite_t *mouseShopIcon;
-extern gfx_sprite_t *grandmaShopIcon;
-extern gfx_sprite_t *farmShopIcon;
-extern gfx_sprite_t *mineShopIcon;
-extern gfx_sprite_t *factoryShopIcon;
-
-extern gfx_sprite_t *bankShopIcon;
-extern gfx_sprite_t *templeShopIcon;
-extern gfx_sprite_t *towerShopIcon;
-extern gfx_sprite_t *shipmentShopIcon;
-extern gfx_sprite_t *alchemyShopIcon;
 
 extern float mouseCost;
 extern float mouseMultiplier;
@@ -68,7 +50,6 @@ extern int alchemyOwned;
 
 void getInput(void);
 void renderWindow(void);
-void decompressSprites(void);
 void initGfx(void);
 void timerStuff(void);
 

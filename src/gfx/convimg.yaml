@@ -22,6 +22,8 @@ converts:
      - assets/ui/functionButton.png
      - assets/ui/shopSlot.png
      - assets/ui/menuSwitchButton.png
+     - assets/ui/panelHorizontal.png
+     - assets/ui/panelVertical.png
      
      - assets/ui/shopIcons/mouseShopIcon.png
      - assets/ui/shopIcons/grandmaShopIcon.png

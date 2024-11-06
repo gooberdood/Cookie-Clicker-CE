@@ -7,6 +7,7 @@
 #include <time.h>
 #include <math.h>
 #include "gfx/ccsprt.h"
+#include "loadSprites.h"
 #include "functions.h"
 
 //frame limit
@@ -52,5 +53,6 @@ int main(void) {
 	free(towerShopIcon);
 	free(shipmentShopIcon);
 	free(alchemyShopIcon);
+	free(panelHorizontal);
     return 0;
 }
