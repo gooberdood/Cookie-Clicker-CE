@@ -289,7 +289,7 @@ void renderWindow(void) {
 		}
 		if (shopMenu == 2) {
 			gfx_TransparentSprite(bankShopIcon, 196, 6);
-			gfx_TransparentSprite(templeShopIcon, 196, 41m);
+			gfx_TransparentSprite(templeShopIcon, 196, 41);
 			gfx_TransparentSprite(towerShopIcon, 196, 76);
 			gfx_TransparentSprite(shipmentShopIcon, 196, 111);
 			gfx_TransparentSprite(alchemyShopIcon, 196, 145);
